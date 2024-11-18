@@ -73,21 +73,40 @@ const FullPage = () => {
           });
         }
 
-        const aboutTl = gsap.timeline();
-
+        
         const statItems = document.querySelectorAll(".raw-stats");
 
         statItems.forEach((stat) => {
-          for (let i = 0; i < stat.innerHTML; i++) {
-            console.log("hi" + i);
-          }
+          // Get the number by removing the '+' sign before parsing
+          const endValue = parseInt(stat.textContent.replace('+', ''));
+          
+          gsap.fromTo(stat, 
+            { innerText: '0' },
+            {
+              innerText: endValue,
+              duration: 2,
+              ease: "power1.out",
+              scrollTrigger: {
+                trigger: ".about-stats",
+                start: "top bottom",
+              },
+              onUpdate: function() {
+                this.targets()[0].textContent = Math.ceil(this.targets()[0].innerText) + '+';
+              }
+            }
+          );
         });
-
-        aboutTl.from(".stat-item", {
+        
+        // Keep your existing fade animation
+        gsap.from(".stat-item", {
           opacity: 0,
-          y: -50,
+          y: -80,
           duration: 0.8,
           stagger: 0.08,
+          scrollTrigger: {
+            trigger: ".about-stats",
+            start: "top bottom",
+          }
         });
       }, main);
     },
